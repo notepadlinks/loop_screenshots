@@ -1,3 +1,8 @@
+param(
+    [string]$botToken,
+    [string]$chatId
+)
+
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
@@ -16,15 +21,12 @@ function Send-TelegramDocument {
         [string]$filePath
     )
 
-    $token = [System.Environment]::GetEnvironmentVariable("TELEGRAM_BOT_TOKEN")
-    $chatId = [System.Environment]::GetEnvironmentVariable("TELEGRAM_CHAT_ID")
-    
-    if (-not $token -or -not $chatId) {
+    if (-not $botToken -or -not $chatId) {
         Write-Host "Bot token or chat ID is missing!"
         return
     }
 
-    $url = "https://api.telegram.org/bot$token/sendDocument"
+    $url = "https://api.telegram.org/bot$botToken/sendDocument"
 
     $boundary = [guid]::NewGuid().ToString()
     $LF = "`r`n"
